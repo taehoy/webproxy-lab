@@ -10,6 +10,12 @@ all: tiny cgi
 tiny: tiny.c csapp.o
 	$(CC) $(CFLAGS) -o tiny tiny.c csapp.o $(LIB)
 
+echoclient: echoclient.c csapp.o
+	$(CC) $(CFLAGS) -o echoclient echoclient.c csapp.o $(LIB)
+
+echoserver: echoserver.c csapp.o
+	$(CC) $(CFLAGS) -o echoserver echoserver.c csapp.o $(LIB)
+
 csapp.o: csapp.c
 	$(CC) $(CFLAGS) -c csapp.c
 
