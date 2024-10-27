@@ -203,8 +203,8 @@ void serve_static(int fd, char *filename, int filesize){
 
   // 클라이언트에게 전송할 응답 본문을 설정
   srcfd = Open(filename, O_RDONLY, 0); // 파일을 읽기 전용으로 열기
-  srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0); // 파일을 메모리에 매핑
-  Close(srcfd); // 파일 디스크립터 닫기 (메모리에 매핑되어 있으므로 필요 없음)
+  srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0); // 파일을 가상메모리에 매핑
+  Close(srcfd);                   // 파일 디스크립터 닫기 (메모리에 매핑되어 있으므로 필요 없음)
   Rio_writen(fd, srcp, filesize); // 파일 내용을 클라이언트에 전송
   Munmap(srcp, filesize); // 매핑된 메모리 해제
 }
@@ -239,6 +239,8 @@ void get_filetype(char *filename, char *filetype) {
         strcpy(filetype, "image/png"); // PNG 이미지 파일
     else if (strstr(filename, ".jpg"))
         strcpy(filetype, "image/jpeg"); // JPEG 이미지 파일
+    else if (strstr(filename, ".mp4"))
+        strcpy(filetype, "video/mp4"); // mp4 비디오 파일
     else
         strcpy(filetype, "text/plain"); // 기본 타입: 일반 텍스트 파일
 }
