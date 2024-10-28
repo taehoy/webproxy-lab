@@ -26,7 +26,8 @@ int main(int argc, char **argv)
     // 표준 입력으로부터 텍스트 라인을 읽어서 서버에 전송하고 응답 받음
     while (Fgets(buf, MAXLINE, stdin) != NULL){ // 사용자 입력을 buf에 저장
         Rio_writen(clientfd, buf, strlen(buf)); // buf의 내용을 서버로 전송, 버퍼 모든 내용을 한번에 보냄.
-        Rio_readinitb(&rio, MAXLINE); // 서버로부터 응답을 읽어 buf에 저장,
+        // Rio_readinitb(&rio, MAXLINE); // 서버로부터 응답을 읽어 buf에 저장,
+        Rio_readlineb(&rio, buf, MAXLINE); // 서버로부터 응답을 읽어 buf에 저장,
         Fputs(buf, stdout); // 서버에 응답을 표준 출력(stdout)으로 출력
     }
     Close(clientfd); // 모든 작업이 끝나면 서버와의 연결을 닫음
