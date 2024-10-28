@@ -203,10 +203,16 @@ void serve_static(int fd, char *filename, int filesize){
 
   // 클라이언트에게 전송할 응답 본문을 설정
   srcfd = Open(filename, O_RDONLY, 0); // 파일을 읽기 전용으로 열기
-  srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0); // 파일을 가상메모리에 매핑
+  // srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0); // 파일을 가상메모리에 매핑
+
+  // Q11.9 Mmap대신 malloc 사용 -> 빈칸에 사용해야하므로 빈 공간에 메모리 읽어야함.
+  srcp = (char *)malloc(filesize);
+  Rio_readn(srcfd, srcp, filesize);
+
   Close(srcfd);                   // 파일 디스크립터 닫기 (메모리에 매핑되어 있으므로 필요 없음)
   Rio_writen(fd, srcp, filesize); // 파일 내용을 클라이언트에 전송
-  Munmap(srcp, filesize); // 매핑된 메모리 해제
+  // Munmap(srcp, filesize); // 매핑된 메모리 해제
+  free(srcp); // 동적할당 해제
 }
 
 // 동적 콘텐츠를 클라이언트에 제공하는 함수
